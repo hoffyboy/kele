@@ -29,6 +29,14 @@ class Kele
   def get_me
     url = 'https://www.bloc.io/api/v1/users/me'
     response = self.class.get(url, headers: { "authorization" => @auth_token })
+    user = JSON.parse(response.body)
+  end
+
+  def get_mentor_availability
+    user = get_me
+    mentor_id = user["current_enrollment"]["mentor_id"]
+    url = "https://www.bloc.io/api/v1/mentors/#{mentor_id}/student_availability"
+    response = self.class.get(url, headers: { "authorization" => @auth_token })
     JSON.parse(response.body)
   end
 end
