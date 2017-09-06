@@ -1,10 +1,11 @@
 require 'httparty'
+require 'json'
 
 class Kele
   attr_reader :token, :base_api
   include HTTParty
+
   def initialize(email, password)
-    # base_uri = 'bloc.io/api/v1'
     @base_api = "https://www.bloc.io/api/v1"
 
     values = {
@@ -16,13 +17,18 @@ class Kele
       :content_type => 'application/json'
     }
 
-    response = self.class.post('https://www.bloc.io/api/v1/sessions', body: values.to_json, headers: headers)
+    url = 'https://www.bloc.io/api/v1/sessions'
+    response = self.class.post(url, body: values.to_json, headers: headers)
     if response["auth_token"]
-      @token = response["auth_token"]
+      @auth_token = response["auth_token"]
     else
       puts response["message"]
     end
+  end
 
-
+  def get_me
+    url = 'https://www.bloc.io/api/v1/users/me'
+    response = self.class.get(url, headers: { "authorization" => @auth_token })
+    JSON.parse(response.body)
   end
 end
