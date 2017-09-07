@@ -22,7 +22,18 @@ module Roadmap
 
     url = "https://www.bloc.io/api/v1/checkpoint_submissions"
     response = self.class.post(url, body: values, headers: { "authorization" => @auth_token })
+  end
 
+  def update_submission(id, checkpoint_id, assignment_branch = nil, assignment_commit_link = nil, comment = nil)
+    values = {
+      "checkpoint_id": checkpoint_id,
+      "assignment_branch": assignment_branch,
+      "assignment_commit_link": assignment_commit_link,
+      "comment": comment,
+      "enrollment_id": @user["current_enrollment"]["id"],
+    }
 
+    url = "https://www.bloc.io/api/v1/checkpoint_submissions/#{id}"
+    response = self.class.put(url, body: values, headers: { "authorization" => @auth_token })
   end
 end
