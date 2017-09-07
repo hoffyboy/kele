@@ -10,11 +10,10 @@ module Messaging
     JSON.parse(response.body)
   end
 
-  def create_message(sender = @user["email"], recipient_id = @mentor, subject, message)
+  def create_message(subject = nil, message)
     values = {
-      "sender": sender,
-      "recipient_id": recipient_id,
-      "token": "efaca114-a4b5-4700-b7c6-56120f577cff",
+      "sender": @user["email"],
+      "recipient_id": @mentor,
       "subject": subject,
       "stripped-text": message
     }
@@ -22,5 +21,6 @@ module Messaging
     url = "https://www.bloc.io/api/v1/messages"
     response = self.class.post(url, body: values, headers: { "authorization" => @auth_token })
     puts response["message"] if response["message"]
+    response
   end
 end
